@@ -17,7 +17,6 @@ public:
 	Node<T>(const T& value) :value(value), next(nullptr), prev(nullptr) {};
 };
 
-
 template<typename T>
 class LinkedList {
 private:
@@ -58,7 +57,6 @@ public:
 			Node<T>* tmp = head;
 			head = head->next;
 			delete tmp;
-			tmp = nullptr;
 		}
 	}
 
@@ -134,7 +132,6 @@ public:
 			Node<T>* tmp = head;
 			head = head->next;
 			delete tmp;
-			tmp = nullptr;
 		}
 		this->head = new_list.head;
 		new_list.head = nullptr;
@@ -154,7 +151,6 @@ public:
 				head = head->next;
 				head->prev = nullptr;
 				delete tmp;
-				tmp = nullptr;
 			}
 		}
 	}
@@ -175,9 +171,6 @@ public:
 				head = nullptr;
 			}
 			delete last;
-			last = nullptr;
-
-
 		}
 	}
 	
@@ -240,3 +233,18 @@ public:
 		throw out_of_range("Index out of range");
 	}
 };
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, LinkedList<T>& rhs)
+{
+	Node<T>* tmp = rhs.get_head();
+	if (tmp == nullptr) {
+		os << "List is empty";
+		return os;
+	}
+	while (tmp != nullptr) {
+		os << tmp->value << " ";
+		tmp = tmp->next;
+	}
+	return os;
+}
