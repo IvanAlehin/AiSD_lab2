@@ -12,9 +12,10 @@ template<typename T>
 class Node {
 public:
 	T value;
+	int power;
 	Node<T>* next;
 	Node<T>* prev;
-	Node<T>(const T& value) :value(value), next(nullptr), prev(nullptr) {};
+	Node<T>(const T& value, const int& power) :value(value), power(power) next(nullptr), prev(nullptr) {};
 };
 
 template<typename T>
@@ -30,7 +31,7 @@ public:
 		head = nullptr;
 		Node<T>* tmp_other = other.head;
 		while (tmp_other) {
-			this->push_tail(tmp_other->value);
+			this->push_tail(tmp_other->value, tmp_other->power);
 			tmp_other = tmp_other->next;
 		}
 	}
@@ -39,7 +40,7 @@ public:
 		head = nullptr;
 		int count = 0;
 		while (count != size) {
-			this->push_tail((int)(rand()) * rand_max / RAND_MAX + 1);
+			this->push_tail((int)(rand()) * rand_max / RAND_MAX + 1, count);
 			count ++;
 		}
 	}
@@ -47,7 +48,7 @@ public:
 		head = nullptr;
 		int count = 0;
 		while (count != size) {
-			this->push_tail((float)(rand()) * (rand_max - 0.0001f) / RAND_MAX + 0.0001f);
+			this->push_tail((float)(rand()) * (rand_max - 0.0001f) / RAND_MAX + 0.0001f, count);
 			count ++;
 		}
 	}
@@ -66,7 +67,7 @@ public:
 		}
 		Node<T>* tmp_other = other.head;
 		while (tmp_other) {
-			this->push_tail(tmp_other->value);
+			this->push_tail(tmp_other->value, tmp_other->power);
 			tmp_other = tmp_other->next;
 		}
 	}
@@ -75,8 +76,8 @@ public:
 		return head;
 	}
 
-	void push_tail(const T& value) {
-		Node<T>* newNode = new Node<T>(value);
+	void push_tail(const T& value, const int& power) {
+		Node<T>* newNode = new Node<T>(value, power);
 		if (head == nullptr) {
 			head = newNode;
 		}
@@ -94,14 +95,14 @@ public:
 		if (other.head != nullptr) {
 			Node<T>* tmp_other = other.head;
 			while (tmp_other) {
-				this->push_tail(tmp_other->value);
+				this->push_tail(tmp_other->value, tmp_other->power);
 				tmp_other = tmp_other->next;
 			}
 		}
 	}
 
-	void push_head(const T& value) {
-		Node<T>* newNode = new Node<T>(value);
+	void push_head(const T& value, const int& power) {
+		Node<T>* newNode = new Node<T>(value, power);
 		if (head == nullptr) {
 			head = newNode;
 		}
@@ -117,14 +118,14 @@ public:
 		if (other.head != nullptr) {
 			Node<T>* tmp_other = other.head;
 			while (tmp_other) {
-				new_list.push_tail(tmp_other->value);
+				new_list.push_tail(tmp_other->value, tmp_other->power);
 				tmp_other = tmp_other->next;
 			}
 		}
 		if (this->head != nullptr) {
 			Node<T>* tmp_this = this->head;
 			while (tmp_this) {
-				new_list.push_tail(tmp_this->value);
+				new_list.push_tail(tmp_this->value, tmp_this->power);
 				tmp_this = tmp_this->next;
 			}
 		}
@@ -232,6 +233,30 @@ public:
 		}
 		throw out_of_range("Index out of range");
 	}
+
+	int get_power(int index) {
+		Node<T>* tmp = head;
+		int count = 0;
+		while (tmp != nullptr) {
+			if (count == index) {
+				return tmp->power;
+			}
+			else {
+				tmp = tmp->next;
+				count++;
+			}
+		}
+		throw out_of_range("Index out of range");
+	}
+	T compute(const T x) {
+		T sum = 0;
+		auto current = head;
+		while (current) {
+			sum += (current->value * pow(x, current->power));
+			current = current->next;
+		}
+		return sum;
+	}
 };
 
 template<typename T>
@@ -242,9 +267,21 @@ std::ostream& operator<<(std::ostream& os, LinkedList<T>& rhs)
 		os << "List is empty";
 		return os;
 	}
+	int size = 0;
 	while (tmp != nullptr) {
-		os << tmp->value << " ";
+		size++;
+		/*os << tmp->value << " ";*/
 		tmp = tmp->next;
 	}
+
+	for (int i = size; i >= 0; --i) {
+		if (i < size) {
+			if (temp[i] >= T(0)) os << " +";
+			if (temp[i] < T(0)) os << " ";
+		}
+		if (i > 0) os << temp[i] << "*x^" << temp.get_power(i);
+		else os << temp[i] << "*x^" << temp.get_power(i);
+	}	
+	
 	return os;
 }
