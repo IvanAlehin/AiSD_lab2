@@ -15,7 +15,7 @@ public:
 	int power;
 	Node<T>* next;
 	Node<T>* prev;
-	Node<T>(const T& value, const int& power) :value(value), power(power) next(nullptr), prev(nullptr) {};
+	Node<T>(const T& value, const int& power) :value(value), power(power), next(nullptr), prev(nullptr) {};
 };
 
 template<typename T>
@@ -67,8 +67,13 @@ public:
 		}
 		Node<T>* tmp_other = other.head;
 		while (tmp_other) {
-			this->push_tail(tmp_other->value, tmp_other->power);
-			tmp_other = tmp_other->next;
+			if (tmp_other->value == 0) {
+				throw invalid_argument("Коэффицент равен 0");
+			}
+			else {
+				this->push_tail(tmp_other->value, tmp_other->power);
+				tmp_other = tmp_other->next;
+			}
 		}
 	}
 
@@ -257,30 +262,32 @@ public:
 		}
 		return sum;
 	}
+
 };
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, LinkedList<T>& rhs)
 {
-	Node<T>* tmp = rhs.get_head();
-	if (tmp == nullptr) {
+	Node<T>* tmp2 = rhs.get_head();
+	LinkedList<T> tmp1(rhs);
+	if (tmp2 == nullptr) {
 		os << "List is empty";
 		return os;
 	}
 	int size = 0;
-	while (tmp != nullptr) {
+	while (tmp2 != nullptr) {
 		size++;
 		/*os << tmp->value << " ";*/
-		tmp = tmp->next;
+		tmp2 = tmp2->next;
 	}
 
-	for (int i = size; i >= 0; --i) {
-		if (i < size) {
-			if (temp[i] >= T(0)) os << " +";
-			if (temp[i] < T(0)) os << " ";
+	for (int i = size-1; i >= 0; --i) {
+		if (i < size-1) {
+			if (tmp1[i] >= T(0)) os << " +";
+			if (tmp1[i] < T(0)) os << " ";
 		}
-		if (i > 0) os << temp[i] << "*x^" << temp.get_power(i);
-		else os << temp[i] << "*x^" << temp.get_power(i);
+		if (i > 0) os << tmp1[i] << "*x^" << tmp1.get_power(i);
+		else os << tmp1[i] << "*x^" << tmp1.get_power(i);
 	}	
 	
 	return os;
