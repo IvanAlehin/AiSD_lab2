@@ -7,7 +7,6 @@
 using namespace std;
 
 
-
 template<typename T>
 class Node {
 public:
@@ -15,7 +14,12 @@ public:
 	int power;
 	Node<T>* next;
 	Node<T>* prev;
-	Node<T>(const T& value, const int& power) :value(value), power(power), next(nullptr), prev(nullptr) {};
+	Node<T>(const T& value, const int& power) :value(value), power(power), next(nullptr), prev(nullptr) {
+		if (value == 0) {
+			throw invalid_argument("Коэффицент равен 0");
+		}
+	};
+	
 };
 
 template<typename T>
@@ -40,7 +44,7 @@ public:
 		head = nullptr;
 		int count = 0;
 		while (count != size) {
-			this->push_tail((int)(rand()) * rand_max / RAND_MAX + 1, count);
+			this->push_tail((int)(rand()) * (rand_max) / RAND_MAX - 1, count);
 			count ++;
 		}
 	}
@@ -58,6 +62,7 @@ public:
 			Node<T>* tmp = head;
 			head = head->next;
 			delete tmp;
+
 		}
 	}
 
@@ -67,13 +72,8 @@ public:
 		}
 		Node<T>* tmp_other = other.head;
 		while (tmp_other) {
-			if (tmp_other->value == 0) {
-				throw invalid_argument("Коэффицент равен 0");
-			}
-			else {
 				this->push_tail(tmp_other->value, tmp_other->power);
 				tmp_other = tmp_other->next;
-			}
 		}
 	}
 
@@ -169,9 +169,9 @@ public:
 			while (last->next != nullptr) {
 				last = last->next;
 			}
-			Node<T>* prev_last = last->prev;
-			if (prev_last != nullptr) {
-				prev_last->next = nullptr;
+			Node<T>* prev = last->prev;
+			if (prev != nullptr) {
+				prev->next = nullptr;
 			}
 			else {
 				head = nullptr;
@@ -286,9 +286,9 @@ std::ostream& operator<<(std::ostream& os, LinkedList<T>& rhs)
 			if (tmp1[i] >= T(0)) os << " +";
 			if (tmp1[i] < T(0)) os << " ";
 		}
-		if (i > 0) os << tmp1[i] << "*x^" << tmp1.get_power(i);
-		else os << tmp1[i] << "*x^" << tmp1.get_power(i);
+		os << tmp1[i] << "x^" << tmp1.get_power(i);
 	}	
+	
 	
 	return os;
 }
