@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.11)
 
-project(linkedlist  CXX)
+project(sorting CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -17,8 +17,8 @@ if(MSVC)
     endif()
 endif()
 
-add_library(Node STATIC "Node/Node.cpp")
-target_include_directories(Node PUBLIC "Node")
+add_library(Sort STATIC "Sort/Sort.cpp")
+target_include_directories(Sort PUBLIC "Sort")
 
 add_executable (${PROJECT_NAME} "main.cpp")
 
