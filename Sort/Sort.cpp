@@ -20,6 +20,29 @@ void Swap(T& a, T& b) {
     b = tmp;
 }
 
+class MyClass {
+private:
+    int value;
+public:
+    MyClass() :value(0) {};
+    MyClass(const int value) :value(value) {};
+    int get_value() const {
+        return this->value;
+    }
+    bool operator>(const MyClass& rhs) const {
+        return this->value > rhs.value;
+    }
+
+    bool operator<(const MyClass& rhs) const {
+        return this->value < rhs.value;
+    }
+};
+
+ostream& operator<<(std::ostream& os, stats& stat){
+    os << "comparison_count = " << stat.comparison_count << " copy_count = " << stat.copy_count;
+    return os;
+}
+
 template<typename T>
 stats& BubbleSort(vector<T>& vec) {
     stats sort_stats;
@@ -88,4 +111,40 @@ stats& HeapSort(vector<T>& vec) {
         Heapify(vec, i, 0, sort_stats);
     }
     return sort_stats;
+}
+
+
+template <typename T>
+vector<T> RandomVec(size_t size) {
+    vector<T> vec(size);
+    srand(static_cast<unsigned int>(time(0)));
+    for (size_t i = 0; i < size; ++i) {
+        vec[i] = rand();
+    }
+    return vec;
+}
+
+template <typename T>
+vector<T> SortedVec(size_t size) {
+    vector<T> vec(size);
+    for (size_t i = 0; i < size; ++i) {
+        vec[i] = i;
+    }
+    return vec;
+}
+
+template <typename T>
+vector<T> ReverseSortedVec(size_t size) {
+    vector<T> vec(size);
+    for (size_t i = 0; i < size; ++i) {
+        vec[i] = size - i;
+    }
+    return vec;
+}
+
+template <typename T>
+void PrintVec(vector<T> vec) {
+    for (int i = 0; i < vec.size(); ++i)
+        cout << vec[i] << " ";
+    cout << endl;
 }
